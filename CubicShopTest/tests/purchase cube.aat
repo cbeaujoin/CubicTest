@@ -2,17 +2,17 @@
   <startPoint class="extensionStartPoint">
     <sourceExtensionPointPageId>page313031181162367078413</sourceExtensionPointPageId>
     <sourceExtensionPointName>Webshop Extension Point</sourceExtensionPointName>
-    <filePath>/tests/frontpage.aat</filePath>
+    <filePath>/CubicShopTest/tests/frontpage.aat</filePath>
     <outTransitions>
       <extensionTransition>
         <id>page129011931162367112723</id>
         <start class="extensionStartPoint" reference="../../.."/>
         <end class="subTest">
-          <filePath>/tests/log_in.aat</filePath>
+          <filePath>/CubicShopTest/tests/log_in.aat</filePath>
           <inTransition class="extensionTransition" reference="../.."/>
           <outTransitions>
             <extensionTransition>
-              <id>page124927371177885602720</id>
+              <id>1157064802173</id>
               <start class="subTest" reference="../../.."/>
               <end class="page">
                 <commons/>
@@ -248,12 +248,12 @@
                                         <outTransitions/>
                                         <id>page178522161162367708569</id>
                                         <position>
-                                          <x>62</x>
-                                          <y>640</y>
+                                          <x>363</x>
+                                          <y>448</y>
                                         </position>
                                         <dimension>
-                                          <width>100</width>
-                                          <height>46</height>
+                                          <width>93</width>
+                                          <height>49</height>
                                         </dimension>
                                         <name defined-in="transitionNode"></name>
                                         <autoPosition>false</autoPosition>
@@ -262,26 +262,27 @@
                                   </outTransitions>
                                   <id>page79834131162367708569</id>
                                   <position>
-                                    <x>62</x>
-                                    <y>516</y>
+                                    <x>335</x>
+                                    <y>323</y>
                                   </position>
                                   <dimension>
-                                    <width>100</width>
-                                    <height>67</height>
+                                    <width>93</width>
+                                    <height>70</height>
                                   </dimension>
                                   <name defined-in="transitionNode"></name>
                                   <autoPosition>false</autoPosition>
                                 </end>
                               </userInteractionsTransition>
+                              <userInteractionsTransition reference="../userInteractionsTransition"/>
                             </outTransitions>
                             <id>page18041191162367708569</id>
                             <position>
-                              <x>61</x>
-                              <y>378</y>
+                              <x>145</x>
+                              <y>289</y>
                             </position>
                             <dimension>
-                              <width>100</width>
-                              <height>67</height>
+                              <width>101</width>
+                              <height>63</height>
                             </dimension>
                             <name defined-in="transitionNode"></name>
                             <autoPosition>false</autoPosition>
@@ -290,12 +291,12 @@
                       </outTransitions>
                       <id>page219799911162367708569</id>
                       <position>
-                        <x>61</x>
-                        <y>257</y>
+                        <x>54</x>
+                        <y>195</y>
                       </position>
                       <dimension>
-                        <width>100</width>
-                        <height>46</height>
+                        <width>93</width>
+                        <height>70</height>
                       </dimension>
                       <autoPosition>false</autoPosition>
                     </end>
@@ -303,11 +304,11 @@
                 </outTransitions>
                 <id>page314123731176116800828</id>
                 <position>
-                  <x>61</x>
-                  <y>136</y>
+                  <x>56</x>
+                  <y>116</y>
                 </position>
                 <dimension>
-                  <width>100</width>
+                  <width>93</width>
                   <height>46</height>
                 </dimension>
                 <name defined-in="transitionNode"></name>
@@ -317,13 +318,9 @@
           </outTransitions>
           <id>1176113385078</id>
           <position>
-            <x>57</x>
+            <x>73</x>
             <y>69</y>
           </position>
-          <dimension>
-            <width>93</width>
-            <height>70</height>
-          </dimension>
           <name></name>
           <autoPosition>false</autoPosition>
         </end>
@@ -353,8 +350,8 @@
     <userInteractionsTransition reference="../../startPoint/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition"/>
     <userInteractionsTransition reference="../../startPoint/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition"/>
     <extensionTransition reference="../../startPoint/outTransitions/extensionTransition"/>
-    <userInteractionsTransition reference="../../startPoint/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/userInteractionsTransition"/>
     <extensionTransition reference="../../startPoint/outTransitions/extensionTransition/end/outTransitions/extensionTransition"/>
+    <userInteractionsTransition reference="../../startPoint/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/userInteractionsTransition"/>
   </transitions>
   <customTestSteps/>
   <allLanguages>
@@ -364,5 +361,5 @@
   <name>purchase cube</name>
   <description></description>
   <id>test1162367679267</id>
-  <modelVersion>6</modelVersion>
+  <modelVersion>5</modelVersion>
 </test>
