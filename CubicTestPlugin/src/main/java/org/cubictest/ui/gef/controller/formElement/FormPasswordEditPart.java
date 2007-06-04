@@ -1,0 +1,36 @@
+/*
+ * Created on 28.may.2005
+ * 
+ * This software is licensed under the terms of the GNU GENERAL PUBLIC LICENSE
+ * Version 2, which can be found at http://www.gnu.org/copyleft/gpl.html
+ * 
+ */
+package org.cubictest.ui.gef.controller.formElement;
+
+import org.cubictest.model.formElement.Password;
+import org.cubictest.ui.gef.view.CubicTestImageRegistry;
+import org.eclipse.swt.graphics.Image;
+
+
+/**
+ * @author SK Skytteren
+ *
+ * Controller for the <code>Password</code>.
+ */
+public class FormPasswordEditPart extends FormElementEditPart {
+
+	/**
+	 * Constuctor for the FormPassWordEditPart whihc is a controller 
+	 * for the <code>Password</code>.
+	 * @param password
+	 */
+	public FormPasswordEditPart(Password password) {
+		super();
+		setModel(password);
+	}
+	@Override
+	protected Image getImage(boolean isNot) {
+		return CubicTestImageRegistry.get(
+				CubicTestImageRegistry.PASSWORD_IMAGE,getModel().isNot());
+	}
+}

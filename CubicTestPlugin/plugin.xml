@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension-point id="org.cubictest.exporters" name="CubicTestExporters" schema="schema/org.cubictest.exporters.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.cubictest.ui.gef.editors.GraphicalTestEditor"
+            contributorClass="org.cubictest.ui.gef.actions.TestActionBarContributor"
+            default="true"
+            extensions="aat"
+            icon="$nl$/icons/fileicon.gif"
+            id="org.cubictest.ui.gef.editors.GraphicalTestEditor"
+            name="Graphical Test Editor"/>
+      <editor
+            class="org.cubictest.ui.parameterization.ParamsEditor"
+            default="true"
+            extensions="params"
+            icon="icons/fileicon_params.gif"
+            id="org.cubictest.ui.paramterization.ParamsEditor"
+            name="Parameterization Editor"/>
+      <editor
+            class="org.eclipse.jdt.internal.ui.propertiesfileeditor.PropertiesFileEditor"
+            default="true"
+            extensions="properties"
+            icon="$nl$/icons/fileicon_l18n.gif"
+            id="org.cubictest.ui.i18n.PropertiesEditor"
+            name="I18n Editor"/>
+      <editor
+            class="org.cubictest.ui.customstep.CustomStepEditor"
+            contributorClass="org.cubictest.ui.customstep.CustomStepEditorActionBarContributor"
+            default="true"
+            extensions="custom"
+            icon="$nl$/icons/customStep.gif"
+            id="org.cubictest.ui.customstep.CustomStepEditor"
+            name="Custom Step Editor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="CubicTest"
+            id="cubictest">
+      </category>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewTestWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.ui.wizards.NewTestWizard"
+            name="New CubicTest Test"
+            preferredPerspectives="org.cubictest.CubicTestPerspective">
+      </wizard>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewSubTestWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.ui.wizards.NewSubTestWizard"
+            name="New CubicTest SubTest"
+            preferredPerspectives="org.cubictest.CubicTestPerspective">
+      </wizard>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewCubicTestProjectWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.ui.wizards.NewCubicTestProjectWizard"
+            name="New CubicTest Project"
+            preferredPerspectives="org.cubictest.CubicTestPerspective"
+            project="true">
+      </wizard>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewParamWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon_params.gif"
+            id="org.cubictest.ui.wizards.NewParamWizard"
+            name="New CubicTest Param file"
+            preferredPerspectives="org.cubictest.CubicTestPerspective"
+            project="true"/>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewPropertiesWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon_l18n.gif"
+            id="org.cubictest.ui.wizards.NewPropertiesWizard"
+            name="New CubicTest Properties file"
+            preferredPerspectives="org.cubictest.CubicTestPerspective"
+            project="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="cubictest.contribution1"
+            objectClass="org.eclipse.core.resources.IResource">
+         <menu
+               label="CubicTest"
+               path="additions"
+               id="cubictest.menu1">
+            <separator
+                  name="CubicTest">
+            </separator>
+         </menu>    
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.cubictest.CubicTestPerspectiveFactory"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.CubicTestPerspective"
+            name="CubicTest"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="org.cubictest.ui.gef.editors.GraphicalTestEditor"
+            typeMapper="org.cubictest.ui.gef.factory.TestEditorTypeMapper">
+         <propertyCategory category="CubicTest"/>
+      </propertyContributor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs contributorId="org.cubictest.ui.gef.editors.GraphicalTestEditor">
+         <propertyTab
+               category="CubicTest"
+               id="org.cubictest.tab.test"
+               label="Test"/>
+         <propertyTab
+               afterTab="org.cubictest.tab.test"
+               category="CubicTest"
+               id="org.cubictest.tab.userActions"
+               label="User interaction"/>
+         <propertyTab
+               afterTab="org.cubictest.tab.test"
+               category="CubicTest"
+               id="org.cubictest.tab.i18n"
+               label="Internationalisation"/>
+         <propertyTab
+               afterTab="org.cubictest.tab.test"
+               category="CubicTest"
+               id="org.cubictest.tab.param"
+               label="Parameterisation"/>
+         <propertyTab
+               category="CubicTest"
+               id="org.cubictest.tab.customTestStepInput"
+               label="Input"/>
+         <propertyTab
+               afterTab="org.cubictest.tab.sation"
+               category="CubicTest"
+               id="org.cubictest.tab.setUpAndTearDown"
+               label="SetUp and TearDown"/>
+         <propertyTab
+               afterTab="org.cubictest.tab.test"
+               category="CubicTest"
+               id="org.cubictest.tab.properties"
+               label="Properties"/>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections contributorId="org.cubictest.ui.gef.editors.GraphicalTestEditor">
+         <propertySection
+               class="org.cubictest.ui.sections.TestNameSection"
+               id="org.cubictest.test.name"
+               tab="org.cubictest.tab.test">
+            <input type="org.cubictest.model.Test"/>
+         </propertySection>
+         <propertySection
+               class="org.cubictest.ui.sections.StartPointPropertySection"
+               id="org.cubictest.test.startPoint"
+               tab="org.cubictest.tab.test">
+            <input type="org.cubictest.model.UrlStartPoint"/>
+         </propertySection>
+         <propertySection
+               class="org.cubictest.ui.sections.UserActionsSection"
+               id="org.cubictest.userActions"
+               tab="org.cubictest.tab.userActions">
+            <input type="org.cubictest.model.UserInteractionsTransition"/>
+         </propertySection>
+         <propertySection
+               class="org.cubictest.ui.sections.ParameterisationSection"
+               id="org.cubictest.test.param"
+               tab="org.cubictest.tab.param">
+            <input type="org.cubictest.model.Test"/>
+         </propertySection>
+         <propertySection
+               afterSection="org.cubictest.test.param"
+               class="org.cubictest.ui.sections.I18nSection"
+               id="org.cubictest.test.i18n"
+               tab="org.cubictest.tab.i18n">
+            <input type="org.cubictest.model.Test"/>
+         </propertySection>
+         <propertySection
+               afterSection="org.cubictest.test.name"
+               class="org.cubictest.ui.sections.TestDescriptionSection"
+               id="org.cubictest.test.description"
+               tab="org.cubictest.tab.test">
+            <input type="org.cubictest.model.Test"/>
+         </propertySection>
+         <propertySection
+               class="org.cubictest.ui.sections.CustomTestStepInput"
+               id="org.cubictest.test.customTestStepInput"
+               tab="org.cubictest.tab.customTestStepInput">
+            <input type="org.cubictest.model.CustomTestStep"/>
+         </propertySection>
+         <!--
+         <propertySection
+               class="org.cubictest.ui.sections.SetUpAndTearDown"
+               id="org.cubictest.test.setUpAndTearDown"
+               tab="org.cubictest.tab.setUpAndTearDown">
+            <input type="org.cubictest.model.Test"/>
+         </propertySection>
+         -->
+         <propertySection
+               afterSection="org.cubitest.element.not"
+               class="org.cubictest.ui.sections.IdentifierSection"
+               id="org.cubictest.element.identifierType"
+               tab="org.cubictest.tab.properties">
+            <input type="org.cubictest.model.PageElement"/>
+         </propertySection>
+         <propertySection
+               class="org.cubictest.ui.sections.DescriptionSection"
+               id="org.cubictest.element.description"
+               tab="org.cubictest.tab.properties">
+            <input type="org.cubictest.model.IDescription"/>
+         </propertySection>
+         <propertySection
+               afterSection="org.cubictest.element.description"
+               class="org.cubictest.ui.sections.NotSection"
+               id="org.cubictest.element.not"
+               tab="org.cubictest.tab.properties">
+            <input type="org.cubictest.model.PageElement"/>
+         </propertySection>
+         <propertySection
+               afterSection="org.cubictest.element.not"
+               class="org.cubictest.ui.sections.NameSection"
+               id="org.cubictest.abstractpage.name"
+               tab="org.cubictest.tab.properties">
+            <input type="org.cubictest.model.AbstractPage"/>
+         </propertySection>
+      </propertySections>
+   </extension>
+   <extension
+         id="org.cubictest.launch"
+         name="CubicTestLaunch"
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.cubictest.runner.cubicunit.CubicUnitRunner"
+            id="org.cubictest.launch.runner"
+            modes="CubicTestPlugin.launchConfigurationType1"
+            name="CubicTestPlugin.launchConfigurationType1"/>
+   </extension>
+   <!--
+   <extension
+         id="org.cubictest.help"
+         name="CubicTestHelp"
+         point="org.eclipse.help.toc">
+      <toc
+            file="src/main/resources/org/cubictest/help/toc.xml"
+            primary="true"/>
+   </extension>
+   -->
+   <extension
+         id="org.cubictest.startup"
+         name="CubicTestStartup"
+         point="org.eclipse.ui.startup">
+      <startup class="org.cubictest.CubicTestStartup"/>
+   </extension>
+   <extension
+         id="org.eclipse.intro.config"
+         name="CubicTestIntroConfig"
+         point="org.eclipse.ui.intro.config">
+      <config
+            content="src/main/resources/org/cubictest/intro/introContent.xml"
+            id="cubicTestIntroConfig"
+            introId="org.cubictest.intro.config">
+         <presentation
+               home-page-id="homePageId"
+               standby-page-id="standbyPageId">
+            <implementation kind="html"/>
+            <implementation kind="swt"/>
+            <launchBar
+                  bg="red"
+                  computed="false"
+                  fg="black"
+                  location="fastview"/>
+         </presentation>
+      </config>
+   </extension>
+   <extension
+         id="org.eclipse.intro"
+         name="CubicTestIntro"
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.intro"
+            label="CubicTest Introduction"/>
+      <introProductBinding
+            introId="org.cubictest.intro.config"
+            productId="org.cubictest"/>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="CubicTest">
+         <property
+               name="appName"
+               value="CubicTest">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/logo128x128.gif"/>
+         <property
+               name="startupMessageRect"
+               value="7,220,441,20"/>
+         <property
+               name="aboutText"
+               value="Thank you for using CubicTest!&#x0A;&#x0A;See www.cubictest.org for more information and support.&#x0A;&#x0A;CubicTest is created by:&#x0A;Stein Kåre Skytteren&#x0A;Christian Schwarz&#x0A;Erlend Halvorsen"/>
+         <property
+               name="startupProgressRect"
+               value="0,280,455,15"/>
+         <property
+               name="startupForegroundColor"
+               value="C8D5EA"/>
+         <property
+               name="windowImages"
+               value="icons/logo16x16.gif,icons/logo32x32.gif,icons/logo48x48.gif,icons/logo64x64.gif,icons/logo128x128.gif"/>
+      </product>
+   </extension>
+</plugin>

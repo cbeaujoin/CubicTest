@@ -1,0 +1,229 @@
+<test>
+  <startPoint class="urlStartPoint">
+    <beginAt>http://localhost:8080/cubicshop/index.jsp</beginAt>
+    <outTransitions>
+      <simpleTransition>
+        <start class="urlStartPoint" reference="../../.."/>
+        <end class="page">
+          <commons/>
+          <elements>
+            <link>
+              <identifiers>
+                <identifier>
+                  <value>About us</value>
+                  <probability>100</probability>
+                  <type>LABEL</type>
+                  <paramKey></paramKey>
+                  <useI18n>false</useI18n>
+                  <useParam>false</useParam>
+                </identifier>
+              </identifiers>
+              <directEditIdentifier reference="../identifiers/identifier"/>
+              <not>false</not>
+            </link>
+          </elements>
+          <name>Frontpage</name>
+          <inTransition class="simpleTransition" reference="../.."/>
+          <outTransitions>
+            <userInteractionsTransition>
+              <userInteractions>
+                <userInteraction>
+                  <element class="link" reference="../../../../../elements/link"/>
+                  <input></input>
+                  <action>CLICK</action>
+                  <paramKey></paramKey>
+                  <useI18n>false</useI18n>
+                  <useParam>false</useParam>
+                </userInteraction>
+              </userInteractions>
+              <page class="page" reference="../../.."/>
+              <start class="page" reference="../../.."/>
+              <end class="page">
+                <commons/>
+                <elements>
+                  <radioButton>
+                    <checked>false</checked>
+                    <identifiers>
+                      <identifier>
+                        <value>Helpful</value>
+                        <probability>100</probability>
+                        <type reference="../../../../../../../../elements/link/identifiers/identifier/type"/>
+                        <paramKey></paramKey>
+                        <useI18n>false</useI18n>
+                        <useParam>false</useParam>
+                      </identifier>
+                    </identifiers>
+                    <directEditIdentifier reference="../identifiers/identifier"/>
+                    <not>false</not>
+                  </radioButton>
+                  <radioButton>
+                    <checked>false</checked>
+                    <identifiers>
+                      <identifier>
+                        <value>Not helpful</value>
+                        <probability>100</probability>
+                        <type reference="../../../../../../../../elements/link/identifiers/identifier/type"/>
+                        <paramKey></paramKey>
+                        <useI18n>false</useI18n>
+                        <useParam>false</useParam>
+                      </identifier>
+                    </identifiers>
+                    <directEditIdentifier reference="../identifiers/identifier"/>
+                    <not>false</not>
+                  </radioButton>
+                  <button>
+                    <identifiers>
+                      <identifier>
+                        <value>Submit</value>
+                        <probability>100</probability>
+                        <type reference="../../../../../../../../elements/link/identifiers/identifier/type"/>
+                        <paramKey></paramKey>
+                        <useI18n>false</useI18n>
+                        <useParam>false</useParam>
+                      </identifier>
+                    </identifiers>
+                    <directEditIdentifier reference="../identifiers/identifier"/>
+                    <not>false</not>
+                  </button>
+                </elements>
+                <name>Frontpage</name>
+                <inTransition class="userInteractionsTransition" reference="../.."/>
+                <outTransitions>
+                  <userInteractionsTransition>
+                    <userInteractions>
+                      <userInteraction>
+                        <element class="radioButton" reference="../../../../../elements/radioButton"/>
+                        <input></input>
+                        <action>CHECK</action>
+                        <paramKey></paramKey>
+                        <useI18n>false</useI18n>
+                        <useParam>false</useParam>
+                      </userInteraction>
+                      <userInteraction>
+                        <element class="button" reference="../../../../../elements/button"/>
+                        <input></input>
+                        <action reference="../../../../../../userInteractions/userInteraction/action"/>
+                        <paramKey></paramKey>
+                        <useI18n>false</useI18n>
+                        <useParam>false</useParam>
+                      </userInteraction>
+                    </userInteractions>
+                    <page class="page" reference="../../.."/>
+                    <start class="page" reference="../../.."/>
+                    <end class="page">
+                      <commons/>
+                      <elements>
+                        <text>
+                          <identifiers>
+                            <identifier>
+                              <value>Thank you</value>
+                              <probability>100</probability>
+                              <type reference="../../../../../../../../../../../elements/link/identifiers/identifier/type"/>
+                              <paramKey></paramKey>
+                              <useI18n>false</useI18n>
+                              <useParam>false</useParam>
+                            </identifier>
+                          </identifiers>
+                          <directEditIdentifier reference="../identifiers/identifier"/>
+                          <not>false</not>
+                        </text>
+                        <text>
+                          <identifiers>
+                            <identifier>
+                              <value>You voted: Helpful</value>
+                              <probability>100</probability>
+                              <type reference="../../../../../../../../../../../elements/link/identifiers/identifier/type"/>
+                              <paramKey></paramKey>
+                              <useI18n>false</useI18n>
+                              <useParam>false</useParam>
+                            </identifier>
+                          </identifiers>
+                          <directEditIdentifier reference="../identifiers/identifier"/>
+                          <not>false</not>
+                        </text>
+                        <text>
+                          <identifiers>
+                            <identifier>
+                              <value>You voted: Not helpful</value>
+                              <probability>100</probability>
+                              <type reference="../../../../../../../../../../../elements/link/identifiers/identifier/type"/>
+                              <paramKey></paramKey>
+                              <useI18n>false</useI18n>
+                              <useParam>false</useParam>
+                            </identifier>
+                          </identifiers>
+                          <directEditIdentifier reference="../identifiers/identifier"/>
+                          <not>true</not>
+                        </text>
+                      </elements>
+                      <name>Feedback</name>
+                      <inTransition class="userInteractionsTransition" reference="../.."/>
+                      <outTransitions/>
+                      <id>1157927232162</id>
+                      <position>
+                        <x>75</x>
+                        <y>351</y>
+                      </position>
+                      <dimension>
+                        <width>127</width>
+                        <height>88</height>
+                      </dimension>
+                      <name defined-in="transitionNode"></name>
+                      <autoPosition>false</autoPosition>
+                    </end>
+                  </userInteractionsTransition>
+                </outTransitions>
+                <id>page240030251157926506349</id>
+                <position>
+                  <x>88</x>
+                  <y>188</y>
+                </position>
+                <dimension>
+                  <width>100</width>
+                  <height>88</height>
+                </dimension>
+                <name defined-in="transitionNode"></name>
+                <autoPosition>false</autoPosition>
+              </end>
+            </userInteractionsTransition>
+          </outTransitions>
+          <id>1157927085101</id>
+          <position>
+            <x>88</x>
+            <y>67</y>
+          </position>
+          <dimension>
+            <width>100</width>
+            <height>46</height>
+          </dimension>
+          <name defined-in="transitionNode"></name>
+          <autoPosition>false</autoPosition>
+        </end>
+      </simpleTransition>
+    </outTransitions>
+    <id>/CubicShopTest/tests/en liten test.aat</id>
+    <position>
+      <x>0</x>
+      <y>0</y>
+    </position>
+    <name>Frontpage</name>
+    <autoPosition>false</autoPosition>
+  </startPoint>
+  <extensionPoints/>
+  <pages>
+    <page reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/userInteractionsTransition/end"/>
+    <page reference="../../startPoint/outTransitions/simpleTransition/end"/>
+    <page reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition/end"/>
+  </pages>
+  <subTests/>
+  <transitions>
+    <simpleTransition reference="../../startPoint/outTransitions/simpleTransition"/>
+    <userInteractionsTransition reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/userInteractionsTransition"/>
+    <userInteractionsTransition reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/userInteractionsTransition/end/outTransitions/userInteractionsTransition"/>
+  </transitions>
+  <customTestSteps/>
+  <name>en liten test</name>
+  <description></description>
+  <id>/CubicShopTest/tests/en liten test.aat</id>
+  <modelVersion>6</modelVersion>
+</test>

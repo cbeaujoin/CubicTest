@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+
+   <extension
+         point="org.cubictest.exporters"
+         name="CubicTestWatirExporter">
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="cubictest.contribution1"
+            objectClass="org.eclipse.core.resources.IResource">
+         <menu
+               label="CubicTest"
+               path="additions"
+               id="cubictest.menu1">
+            <separator
+                  name="CubicTest">
+            </separator>
+         </menu>
+    
+         <action
+               enablesFor="1"
+               label="Create Watir tests"
+               icon="icons/watir_export_icon.gif"
+               class="org.cubictest.exporters.watir.ui.ExportToWatirAction"
+               menubarPath="cubictest.menu1/group1"
+               id="org.cubictest.exporters.watir.ui.ExportToWatirAction">
+         </action>
+      </objectContribution>
+      <viewerContribution
+            id="CubicTestWatirExporter.viewerContribution1"
+            targetID="cubicTestPlugin.editor.contextmenu">
+         <action
+               class="org.cubictest.exporters.watir.ui.ExportToWatirEditorAction"
+               icon="icons/watir_export_icon.gif"
+               id="org.cubictest.exporters.watir.ui.ExportToWatirEditorAction"
+               label="Create Watir tests"
+               menubarPath="additions"/>
+      </viewerContribution>
+      
+   </extension>
+</plugin>

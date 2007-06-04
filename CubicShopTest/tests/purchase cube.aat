@@ -1,0 +1,110 @@
+<test>
+  <startPoint class="urlStartPoint">
+    <beginAt>http://localhost:8080/cubicshop/index.jsp</beginAt>
+    <outTransitions>
+      <simpleTransition>
+        <start class="urlStartPoint" reference="../../.."/>
+        <end class="subTest">
+          <filePath>/tests/log_in.aat</filePath>
+          <inTransition class="simpleTransition" reference="../.."/>
+          <outTransitions>
+            <extensionTransition>
+              <id>page124927371177885602720</id>
+              <start class="subTest" reference="../../.."/>
+              <end class="subTest">
+                <filePath>tests/subtests/Open webshop.aat</filePath>
+                <inTransition class="extensionTransition" reference="../.."/>
+                <outTransitions>
+                  <extensionTransition>
+                    <id>page193026321179672064199</id>
+                    <start class="subTest" reference="../../.."/>
+                    <end class="subTest">
+                      <filePath>tests/subtests/Buy box.aat</filePath>
+                      <inTransition class="extensionTransition" reference="../.."/>
+                      <outTransitions>
+                        <extensionTransition>
+                          <id>page317192391179663615450</id>
+                          <start class="subTest" reference="../../.."/>
+                          <end class="subTest">
+                            <filePath>tests/subtests/Log out.aat</filePath>
+                            <inTransition class="extensionTransition" reference="../.."/>
+                            <outTransitions/>
+                            <id>subtest325597791179682688932</id>
+                            <position>
+                              <x>112</x>
+                              <y>474</y>
+                            </position>
+                            <dimension>
+                              <width>150</width>
+                              <height>95</height>
+                            </dimension>
+                            <name></name>
+                          </end>
+                        </extensionTransition>
+                      </outTransitions>
+                      <id>subtest300441321179682538346</id>
+                      <position>
+                        <x>109</x>
+                        <y>334</y>
+                      </position>
+                      <dimension>
+                        <width>150</width>
+                        <height>95</height>
+                      </dimension>
+                      <name></name>
+                    </end>
+                  </extensionTransition>
+                </outTransitions>
+                <id>subtest116573881179682538306</id>
+                <position>
+                  <x>75</x>
+                  <y>194</y>
+                </position>
+                <dimension>
+                  <width>150</width>
+                  <height>95</height>
+                </dimension>
+                <name></name>
+              </end>
+            </extensionTransition>
+          </outTransitions>
+          <id>subtest60393221179682538386</id>
+          <position>
+            <x>120</x>
+            <y>79</y>
+          </position>
+          <dimension>
+            <width>93</width>
+            <height>70</height>
+          </dimension>
+          <name></name>
+        </end>
+      </simpleTransition>
+    </outTransitions>
+    <id>urlstartpoint227428311179672651293</id>
+    <position>
+      <x>4</x>
+      <y>4</y>
+    </position>
+    <name>URL</name>
+  </startPoint>
+  <extensionPoints/>
+  <pages/>
+  <subTests>
+    <subTest reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition/end"/>
+    <subTest reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end"/>
+    <subTest reference="../../startPoint/outTransitions/simpleTransition/end"/>
+    <subTest reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end"/>
+  </subTests>
+  <transitions>
+    <extensionTransition reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition"/>
+    <extensionTransition reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition"/>
+    <simpleTransition reference="../../startPoint/outTransitions/simpleTransition"/>
+    <extensionTransition reference="../../startPoint/outTransitions/simpleTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition/end/outTransitions/extensionTransition"/>
+  </transitions>
+  <customTestSteps/>
+  <name>purchase cube</name>
+  <description></description>
+  <id>test1179672651273</id>
+  <modelVersion>7</modelVersion>
+</test>
