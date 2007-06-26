@@ -4,6 +4,8 @@
 */
 package org.cubictest.ui.eclipse;
 
+import java.io.File;
+
 import org.cubictest.CubicTestPlugin;
 import org.cubictest.common.utils.ErrorHandler;
 import org.cubictest.model.Test;
@@ -12,6 +14,7 @@ import org.cubictest.ui.gef.editors.GraphicalTestEditor;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +28,7 @@ import org.eclipse.ui.ide.ResourceUtil;
  * Updates subtests / extension start points in .aat files with new path after a file move.
  * 
  * @author SK Skytteren
+ * @author Christian Schwarz
  */
 public abstract class TraverseTestFilesWorkspaceJob extends WorkspaceJob {
 
@@ -40,8 +44,9 @@ public abstract class TraverseTestFilesWorkspaceJob extends WorkspaceJob {
 
 	@Override
 	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-		traverseContainer(sourceResource.getProject());
 		this.monitor = monitor;
+		monitor.beginTask("Updating possible references to test file " + sourceResource.getFullPath(), 1);
+		traverseContainer(sourceResource.getProject());
 		sourceResource.getProject().refreshLocal(IResource.DEPTH_INFINITE, null);
 		return Status.OK_STATUS;
 	}
@@ -53,9 +58,17 @@ public abstract class TraverseTestFilesWorkspaceJob extends WorkspaceJob {
 	private void traverseContainer(IContainer container){
 		try {
 			for (IResource entry : container.members()) {
+				File file = entry.getWorkspace().getRoot().getFile(entry.getFullPath()).getLocation().toFile();
+				ResourceAttributes resourceAttr = ResourceAttributes.fromFile(file);
+				if (resourceAttr.isHidden() || entry.getName().equals(".svn")) {
+					//skip hidden / SVN files/folders
+					continue;
+				}
+
 				if (entry.getType() == IResource.FOLDER) {
 					traverseContainer((IContainer) entry);
-				} else if(entry.getType() == IResource.FILE){
+				}
+				else if(entry.getType() == IResource.FILE){
 					// convert file if it is a .aat test
 					String fileName = entry.getName();
 					IFile testFile = (IFile) entry;

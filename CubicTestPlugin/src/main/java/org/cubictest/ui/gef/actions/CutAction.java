@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.cubictest.model.AbstractPage;
 import org.cubictest.model.Common;
-import org.cubictest.model.CustomTestStep;
+import org.cubictest.model.CustomTestStepHolder;
 import org.cubictest.model.ExtensionPoint;
 import org.cubictest.model.Page;
 import org.cubictest.model.PageElement;
@@ -43,9 +43,7 @@ import org.eclipse.ui.actions.ActionFactory;
  * 
  * @author chr_schwarz
  */
-public class CutAction extends SelectionAction{
-	
-	private List model = null;
+public class CutAction extends BaseEditorAction {
 	
 	public CutAction(IWorkbenchPart part) {
 		super(part);
@@ -66,14 +64,14 @@ public class CutAction extends SelectionAction{
 	
 	@Override
 	protected boolean calculateEnabled() {
-		if (model == null) {
+		if (getParts() == null) {
 			return false;
 		}
-		else if(model.size() == 1 && model.get(0) instanceof AbstractConnectionEditPart) {
+		else if(getParts().size() == 1 && getParts().get(0) instanceof AbstractConnectionEditPart) {
 			return false;
 		}
-		else if (model.size() == 1 && model.get(0) instanceof PropertyChangePart) {
-			return ((PropertyChangePart) model.get(0)).isCuttable();
+		else if (getParts().size() == 1 && getParts().get(0) instanceof PropertyChangePart) {
+			return ((PropertyChangePart) getParts().get(0)).isCuttable();
 		}
 		else {
 			return true;
@@ -82,7 +80,7 @@ public class CutAction extends SelectionAction{
 	
 	@Override
 	public void run() {
-		List<EditPart> newClips = ViewUtil.getPartsForClipboard(model);
+		List<EditPart> newClips = ViewUtil.getPartsForClipboard(getParts());
 		Clipboard.getDefault().setContents(newClips);
 		
 		Iterator iter = newClips.iterator();
@@ -102,7 +100,7 @@ public class CutAction extends SelectionAction{
 				deleteCmd.setTransitionNode((TransitionNode) item.getModel());
 				compoundCmd.add(deleteCmd);
 			}
-			else if (item.getModel() instanceof CustomTestStep) {
+			else if (item.getModel() instanceof CustomTestStepHolder) {
 				DeleteCustomTestStepCommand deleteCmd = new DeleteCustomTestStepCommand();
 				deleteCmd.setTest((Test) item.getParent().getModel());
 				deleteCmd.setTransitionNode((TransitionNode) item.getModel());
@@ -130,16 +128,4 @@ public class CutAction extends SelectionAction{
 		getCommandStack().execute(compoundCmd);
 	}
 	
-	@Override
-	protected void handleSelectionChanged() {
-		ISelection s = getSelection();
-		if (!(s instanceof IStructuredSelection))
-			return;
-		IStructuredSelection selection = (IStructuredSelection)s;
-		model = null;
-		if (selection != null && selection.size() > 0) {
-			model = selection.toList();
-		}
-		refresh();
-	}
 }

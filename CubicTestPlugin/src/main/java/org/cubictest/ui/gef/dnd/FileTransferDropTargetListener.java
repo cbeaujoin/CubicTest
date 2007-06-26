@@ -1,11 +1,6 @@
-/*
- * This software is licensed under the terms of the GNU GENERAL PUBLIC LICENSE
- * Version 2, which can be found at http://www.gnu.org/copyleft/gpl.html
- */
 package org.cubictest.ui.gef.dnd;
 
-import org.cubictest.common.exception.ResourceNotCubicTestFileException;
-import org.cubictest.ui.gef.factory.SubTestFactory;
+import org.cubictest.ui.gef.factory.FileFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -19,13 +14,14 @@ import org.eclipse.swt.dnd.FileTransfer;
 public class FileTransferDropTargetListener extends
 		AbstractTransferDropTargetListener {
 
-	private SubTestFactory factory;
+	private FileFactory factory;
 
 	public FileTransferDropTargetListener(EditPartViewer viewer) {
 		super(viewer, FileTransfer.getInstance());
-		factory = new SubTestFactory();
+		factory = new FileFactory();
 	}
-
+	
+	@Override
 	protected Request createTargetRequest() {
 		CreateRequest request = new CreateRequest();
 		request.setFactory(factory);
@@ -37,18 +33,20 @@ public class FileTransferDropTargetListener extends
 		((CreateRequest) getTargetRequest()).setLocation(getDropLocation());
 	}
 
+	@Override
 	protected void handleDragOver() {
 		getCurrentEvent().detail = DND.DROP_COPY;
 		super.handleDragOver();
 	}
-
+	
+	@Override
 	protected void handleDrop() {
 		String filePath = ((String[]) getCurrentEvent().data)[0];
-		if (!filePath.endsWith(".aat")) { // wrong filetype
-			throw new ResourceNotCubicTestFileException();
+		if (filePath.endsWith(".aat") || filePath.endsWith(".custom")) { 
+			IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));
+			factory.setFile(iFile);
+			super.handleDrop();
 		}
-		IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));
-		factory.setFile(iFile);
-		super.handleDrop();
 	}
+	
 }

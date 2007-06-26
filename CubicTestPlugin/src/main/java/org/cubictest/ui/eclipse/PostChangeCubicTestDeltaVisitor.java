@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cubictest.CubicTestPlugin;
-import org.cubictest.common.utils.ErrorHandler;
+import org.cubictest.common.utils.UserInfo;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
@@ -28,25 +29,37 @@ import org.eclipse.ui.PartInitException;
  */
 public class PostChangeCubicTestDeltaVisitor implements IResourceDeltaVisitor {
 
+	private static final String MOVE = "move/rename";
+	private static final String DELETE = "delete";
+
+
 	public boolean visit(IResourceDelta delta) throws PartInitException {
 		IResource resource = delta.getResource();
 		if(delta.getKind() == IResourceDelta.REMOVED){
 			if("aat".equals(resource.getFileExtension())) {
 				if (delta.getMovedToPath() == null){
 					//delete
-					closeOpenEditorsOfRemovedFiles(resource, false, "delete");
+					closeOpenEditorsOfRemovedFiles(resource, false, DELETE);
 				}
 				else {
 					//move
-					closeOpenEditorsOfRemovedFiles(resource, true, "move");
+					closeOpenEditorsOfRemovedFiles(resource, true, MOVE);
 					
-					UpdateTestsSubTests operation = new UpdateTestsSubTests(resource,delta.getMovedToPath());
+					//Schedule traversal of tests to update references (if any)
+					IFile newFile = resource.getWorkspace().getRoot().getFile(delta.getMovedToPath());
+					UpdateTestsSubTests operation = new UpdateTestsSubTests(resource, newFile);
 					operation.setRule(resource.getProject());
 					operation.schedule();
 				}
 			}
+			else if (resource.getType() == IResource.FOLDER){
+				IResourceDelta[] deltas = delta.getAffectedChildren();
+				for (int i = 0; i < deltas.length; i++) {
+					visit(deltas[i]);
+				}
+			}
 		}
-		return true; // visit the children
+		return true;
 	}
 
 	
@@ -75,10 +88,11 @@ public class PostChangeCubicTestDeltaVisitor implements IResourceDeltaVisitor {
 			
 			//close the editors:
 			if (toClose.size() > 0) {
-				ErrorHandler.showInfoDialog("Closing editor due to " + operation + ": " + names);
+				if (!operation.equals(DELETE)) {
+					UserInfo.showInfoDialog("Closing editor due to " + operation + ": " + names);
+				}
 				pages[i].closeEditors(toCloseArray, save);
 			}
 		}
 	}
-
 }

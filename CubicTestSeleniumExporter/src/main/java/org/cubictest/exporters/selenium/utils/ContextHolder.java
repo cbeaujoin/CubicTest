@@ -11,6 +11,7 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 import org.cubictest.export.IResultHolder;
 import org.cubictest.model.PageElement;
+import org.cubictest.model.SubTest;
 import org.cubictest.model.context.IContext;
 
 /**
@@ -109,8 +110,13 @@ public class ContextHolder implements IResultHolder {
 		String res = "";
 		int i = 0;
 		for (PageElement pe : context.getElements()) {
-			if (pe.equals(orgElement) && assertOnlyPrevElements) {
-				break;
+			if (pe.equals(orgElement)) {
+				if (assertOnlyPrevElements) {
+					break; //done
+				}
+				else {
+					continue; //skip current element
+				}
 			}
 			if (i > 0) {
 				res += " and ";
@@ -119,5 +125,10 @@ public class ContextHolder implements IResultHolder {
 			i++;
 		}
 		return res;
+	}
+
+
+	public void updateStatus(SubTest subTest, boolean hadException) {
+		//Empty. Can be overridden if exporters want to update sub test statuses.
 	}
 }

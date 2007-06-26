@@ -14,6 +14,14 @@
             id="org.cubictest.ui.gef.editors.GraphicalTestEditor"
             name="Graphical Test Editor"/>
       <editor
+            class="org.cubictest.ui.gef.editors.GraphicalTestEditor"
+            contributorClass="org.cubictest.ui.gef.actions.TestActionBarContributor"
+            default="true"
+            extensions="ats"
+            icon="$nl$/icons/fileicon.gif"
+            id="org.cubictest.ui.gef.editors.GraphicalTestEditor"
+            name="Graphical Test Suite Editor"/>
+      <editor
             class="org.cubictest.ui.parameterization.ParamsEditor"
             default="true"
             extensions="params"
@@ -57,7 +65,16 @@
             finalPerspective="org.cubictest.CubicTestPerspective"
             icon="icons/fileicon.gif"
             id="org.cubictest.ui.wizards.NewSubTestWizard"
-            name="New CubicTest SubTest"
+            name="New CubicTest Sub Test"
+            preferredPerspectives="org.cubictest.CubicTestPerspective">
+      </wizard>
+      <wizard
+            category="cubictest"
+            class="org.cubictest.ui.wizards.NewTestSuiteWizard"
+            finalPerspective="org.cubictest.CubicTestPerspective"
+            icon="icons/fileicon.gif"
+            id="org.cubictest.ui.wizards.NewTestSuiteWizard"
+            name="New CubicTest Test Suite"
             preferredPerspectives="org.cubictest.CubicTestPerspective">
       </wizard>
       <wizard
@@ -148,7 +165,7 @@
          <propertyTab
                category="CubicTest"
                id="org.cubictest.tab.customTestStepInput"
-               label="Input"/>
+               label="Custom Test Step Input"/>
          <propertyTab
                afterTab="org.cubictest.tab.sation"
                category="CubicTest"
@@ -203,10 +220,10 @@
             <input type="org.cubictest.model.Test"/>
          </propertySection>
          <propertySection
-               class="org.cubictest.ui.sections.CustomTestStepInput"
+               class="org.cubictest.ui.sections.CustomTestStepInputSection"
                id="org.cubictest.test.customTestStepInput"
                tab="org.cubictest.tab.customTestStepInput">
-            <input type="org.cubictest.model.CustomTestStep"/>
+            <input type="org.cubictest.model.CustomTestStepHolder"/>
          </propertySection>
          <!--
          <propertySection

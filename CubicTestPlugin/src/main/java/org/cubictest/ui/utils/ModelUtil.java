@@ -4,10 +4,12 @@
  */
 package org.cubictest.ui.utils;
 
-import org.cubictest.common.utils.ErrorHandler;
+import org.cubictest.common.utils.UserInfo;
 import org.cubictest.model.Common;
 import org.cubictest.model.ExtensionStartPoint;
+import org.cubictest.model.IStartPoint;
 import org.cubictest.model.Page;
+import org.cubictest.model.Test;
 import org.cubictest.model.Transition;
 import org.cubictest.model.TransitionNode;
 import org.cubictest.model.UrlStartPoint;
@@ -51,10 +53,10 @@ public class ModelUtil {
 		if (sourceNode instanceof Common && !(targetNode instanceof Page))
 			return TRANSITION_EDIT_NOT_VALID;
 
-		if (sourceNode instanceof ExtensionStartPoint && (isReconnectingSourceNode || isNewTransition)) {
+		if (sourceNode instanceof IStartPoint && (isReconnectingSourceNode || isNewTransition)) {
 			if (sourceNode.getOutTransitions().size() >= 1) { 
-				ErrorHandler.showInfoDialog("Only one out-transition is allowed from Extension startpoints.\n" +
-				"Hint: Create a tree after the first page/state, or create a new test.");
+				UserInfo.showInfoDialog("Only one out-transition is allowed from startpoints.\n" +
+				"Hint: Create a new test or a tree after the first page/state.");
 				return TRANSITION_EDIT_NOT_VALID;
 			}
 		}
@@ -62,7 +64,7 @@ public class ModelUtil {
 		if (isReconnectingSourceNode) {
 			if (sourceNode.hasInTransition() && sourceNode.getInTransition().getStart().equals(targetNode)) {
 				//cycle between source and target
-				ErrorHandler.showInfoDialog("Cycles are not allowed.\n" +
+				UserInfo.showInfoDialog("Cycles are not allowed.\n" +
 						"Hint: Create a new page/state instead.");
 				return TRANSITION_EDIT_NOT_VALID;
 			}
@@ -72,7 +74,7 @@ public class ModelUtil {
 			
 			if (sourceNode.hasInTransition() && sourceNode.getInTransition().getStart().equals(targetNode))  {
 				//cycle between source and target
-				ErrorHandler.showInfoDialog("Cycles are not allowed.\n" +
+				UserInfo.showInfoDialog("Cycles are not allowed.\n" +
 						"Hint: Create a new page/state instead.");
 				return TRANSITION_EDIT_NOT_VALID;
 			}
@@ -85,7 +87,7 @@ public class ModelUtil {
 				}
 				else {
 					//multiple in-transitions not allowed, unless from Common
-					ErrorHandler.showInfoDialog("Multiple in-connections to a page are not allowed, unless from a Common.\n" +
+					UserInfo.showInfoDialog("Multiple in-connections to a page are not allowed, unless from a Common.\n" +
 							"Hint: Create a new page/state instead.");
 					return TRANSITION_EDIT_NOT_VALID;
 				}
@@ -100,5 +102,19 @@ public class ModelUtil {
 		}
 		
 		return TRANSITION_EDIT_VALID;
+	}
+
+
+	public static boolean assertHasOnlyOnePathFrom(TransitionNode node) {
+		if (node == null) {
+			return true;
+		}
+		if (node.getOutTransitions().size() == 0) {
+			return true;
+		}
+		if (node.getOutTransitions().size() > 1) {
+			return false;
+		}
+		return assertHasOnlyOnePathFrom(node.getOutTransitions().get(0).getEnd());
 	}
 }

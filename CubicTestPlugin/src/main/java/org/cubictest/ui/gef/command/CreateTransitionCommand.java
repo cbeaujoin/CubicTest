@@ -10,18 +10,25 @@ package org.cubictest.ui.gef.command;
 import java.util.List;
 
 import org.cubictest.common.utils.ErrorHandler;
+import org.cubictest.common.utils.UserInfo;
+import org.cubictest.model.ActionType;
 import org.cubictest.model.Common;
 import org.cubictest.model.CommonTransition;
 import org.cubictest.model.ConnectionPoint;
-import org.cubictest.model.CustomTestStep;
+import org.cubictest.model.CustomTestStepHolder;
 import org.cubictest.model.ExtensionPoint;
 import org.cubictest.model.ExtensionTransition;
+import org.cubictest.model.IActionElement;
+import org.cubictest.model.IdentifierType;
+import org.cubictest.model.Link;
 import org.cubictest.model.Page;
+import org.cubictest.model.PageElement;
 import org.cubictest.model.SimpleTransition;
 import org.cubictest.model.SubTest;
 import org.cubictest.model.Test;
 import org.cubictest.model.Transition;
 import org.cubictest.model.TransitionNode;
+import org.cubictest.model.UserInteraction;
 import org.cubictest.model.UserInteractionsTransition;
 import org.cubictest.ui.gef.controller.PageEditPart;
 import org.cubictest.ui.gef.interfaces.exported.ITestEditor;
@@ -34,6 +41,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
+import static org.cubictest.model.ActionType.CLICK;
+import static org.cubictest.model.IdentifierType.LABEL;
 
 /**
  * A command that creates a <code>Transition</code>.
@@ -114,9 +123,15 @@ public class CreateTransitionCommand extends Command {
 				SubTest subTest = (SubTest) sourceNode;
 				List<ExtensionPoint> exPoints = subTest.getTest(true).getAllExtensionPoints();
 				if (exPoints == null || exPoints.size() == 0) {
-					ErrorHandler.showErrorDialog("The \"" + subTest.getFileName() + "\" subtest does not contain any extension points.\n" +
-							"To continue, first add an extension point to the subtest and then retry this operation.");
-					return;
+					if(!ModelUtil.assertHasOnlyOnePathFrom(test.getStartPoint())) {
+						UserInfo.showErrorDialog("The \"" + subTest.getFileName() + "\" subtest has more than one path and " +
+								"does not contain any extension points.\n" +
+						"To continue, add an extension point to the subtest or remove the excessive paths and then retry this operation.");
+						return;
+						
+					}
+					transition = new SimpleTransition(sourceNode, targetNode);
+					test.addTransition(transition);
 				}
 				else if (exPoints.size() == 1) {
 					//auto select the single exPoint 
@@ -138,7 +153,7 @@ public class CreateTransitionCommand extends Command {
 				}
 			}
 			else if(sourceNode instanceof Page && (targetNode instanceof Page || 
-					targetNode instanceof SubTest || targetNode instanceof CustomTestStep)) {
+					targetNode instanceof SubTest || targetNode instanceof CustomTestStepHolder)) {
 				//User Interactions transition:
 				transition = new UserInteractionsTransition(sourceNode, targetNode);
 				test.addTransition(transition);
@@ -159,6 +174,15 @@ public class CreateTransitionCommand extends Command {
 					}
 				}
 				if (autoCreateTargetPage) {
+					//if link click: set target page name to name of link 
+					List<UserInteraction> actions = ((UserInteractionsTransition) transition).getUserInteractions();
+					int last = actions.size() - 1;
+					if (last < 0) last = 0;
+					IActionElement element = actions.get(last).getElement();
+					if (element instanceof Link && actions.get(last).getActionType().equals(CLICK)) {
+						targetNode.setName(((Link) element).getIdentifier(LABEL).getValue());
+					}
+					
 					//start direct edit:
 					for(Object obj : pageEditPart.getParent().getChildren()){
 						if (obj instanceof EditPart) {

@@ -13,9 +13,10 @@ import java.util.List;
 import org.cubictest.common.exception.UnknownExtensionPointException;
 import org.cubictest.common.utils.ErrorHandler;
 import org.cubictest.export.IResultHolder;
+import org.cubictest.export.exceptions.TestFailedException;
 import org.cubictest.export.utils.TestWalkerUtils;
 import org.cubictest.model.ConnectionPoint;
-import org.cubictest.model.CustomTestStep;
+import org.cubictest.model.CustomTestStepHolder;
 import org.cubictest.model.ExtensionPoint;
 import org.cubictest.model.ExtensionStartPoint;
 import org.cubictest.model.ExtensionTransition;
@@ -26,6 +27,7 @@ import org.cubictest.model.Transition;
 import org.cubictest.model.TransitionNode;
 import org.cubictest.model.UrlStartPoint;
 import org.cubictest.model.UserInteractionsTransition;
+import org.cubictest.ui.utils.ModelUtil;
 
 /**
  * Converts a Test into test steps placed in the specified resultholder. 
@@ -152,22 +154,46 @@ public class TreeTestWalker<T extends IResultHolder> {
 				convertTransitionNode(resultHolder, (((SubTest) node).getTest(true)).getStartPoint(), (ExtensionStartPoint) node);
 			} 
 			else if (node instanceof SubTest) {
-				Test test = ((SubTest) node).getTest(true);
+				Test subTestTest = ((SubTest) node).getTest(true);
 				List<Transition> outTransitions = node.getOutTransitions();
-				// only convert path in subtest leading to the extension
-				// point that is extended from
 				ExtensionPoint targetExPoint = null;
 				if (outTransitions != null && outTransitions.size() > 0) {
-					targetExPoint = ((ExtensionTransition) outTransitions.get(0)).getExtensionPoint();
+					Transition transition = outTransitions.get(0);
+					if (transition instanceof ExtensionTransition) {
+						// only convert path in subtest leading to the extension point that is extended from
+						targetExPoint = ((ExtensionTransition) transition).getExtensionPoint();
+					}
+					else {
+						//Other transition from SubTest
+						if(!ModelUtil.assertHasOnlyOnePathFrom(subTestTest.getStartPoint())) {
+							ErrorHandler.logAndShowErrorDialogAndThrow("Error traversing test: The \"" + ((SubTest) node).getFileName() + "\" subtest " +
+									"has more than one path and the transition from it is not from an extensoin point.");							
+						}
+						
+					}
 				}
-				convertTransitionNode(resultHolder, test.getStartPoint(), targetExPoint);
-			} 
+				//convert subtest:
+				try {
+					convertTransitionNode(resultHolder, subTestTest.getStartPoint(), targetExPoint);
+					resultHolder.updateStatus(((SubTest) node), false);
+				}
+				catch (TestFailedException e) {
+					resultHolder.updateStatus(((SubTest) node), false);
+					String msg = e.getMessage();
+					msg += ", in subtest \"" + ((SubTest) node).getFileName() + "\"";
+					throw new TestFailedException(msg);
+				}
+				catch (RuntimeException e) {
+					resultHolder.updateStatus(((SubTest) node), true);
+					throw e;
+				}
+			}
 			else if (node instanceof Page) {
 				pageWalker.handlePage(resultHolder, (Page) node);
 			} 
-			else if (node instanceof CustomTestStep) {
+			else if (node instanceof CustomTestStepHolder) {
 				customTestStepConverter.newInstance().handleCustomStep(resultHolder,
-						(CustomTestStep) node);
+						(CustomTestStepHolder) node);
 			}
 
 			int pathNum = 0;

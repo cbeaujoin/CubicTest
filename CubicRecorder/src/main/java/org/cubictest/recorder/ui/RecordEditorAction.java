@@ -14,7 +14,6 @@ import org.cubictest.model.ExtensionStartPoint;
 import org.cubictest.model.ExtensionTransition;
 import org.cubictest.model.Page;
 import org.cubictest.model.SubTest;
-import org.cubictest.model.SubTestStartPoint;
 import org.cubictest.model.Test;
 import org.cubictest.model.Transition;
 import org.cubictest.model.UrlStartPoint;
@@ -56,19 +55,19 @@ public class RecordEditorAction implements IEditorActionDelegate {
 		
 		AutoLayout autoLayout = new AutoLayout(testEditor);
 		Test test = testEditor.getTest();
-		if (test.getStartPoint() instanceof SubTestStartPoint) {
-			ErrorHandler.logAndShowErrorDialog("It is not possible to record from tests that start with a SubTest start point. ");
+		
+		if (!ExportUtils.testIsOkForRecord(test)) {
 			return;
 		}
+		
 		test.resetStatus();
 
 		if(!running) {
 			setRunning(true);
 
-			if (test.getStartPoint() instanceof ExtensionStartPoint && test.getStartPoint().getOutTransitions().size() >= 1 && !firstPageIsEmpty(test)) {
-				ErrorHandler.showWarnDialog("Could not record from extension start point, as test is not empty.\n\n" +
-						"Tip: Create a new test and record from there.");
-				return; //ModelUtil should show error message.
+			if (test.getStartPoint().getOutTransitions().size() >= 1 && !firstPageIsEmpty(test)) {
+				UserInfo.showErrorDialog("The test must be empty to use the recorder.");
+				return;
 			}
 
 

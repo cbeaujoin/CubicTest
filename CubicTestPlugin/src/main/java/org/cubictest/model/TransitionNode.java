@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.cubictest.common.utils.CubicCloner;
 import org.cubictest.common.utils.Logger;
 import org.cubictest.ui.gef.interfaces.exported.ITestEditor;
-import org.cubictest.utils.CubicCloner;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 
@@ -57,6 +57,12 @@ public abstract class TransitionNode extends PropertyAwareObject{
 	public Point getPosition() {
 		if(position == null) {
 			position = new Point(0,0);
+		}
+		if (position.x < 0) {
+			position.x = 0;
+		}
+		if (position.y < 0) {
+			position.y = 0;
 		}
 		return position;
 	}

@@ -7,6 +7,7 @@ package org.cubictest.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 
 import org.cubictest.common.utils.ErrorHandler;
+import org.cubictest.ui.utils.WizardUtils;
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -74,7 +75,6 @@ public class NewCubicTestProjectWizard extends Wizard implements INewWizard {
 	}
 	
 	private void createProject(IProgressMonitor monitor, boolean launchNewTestWizard) {
-		//monitor.beginTask("Creating project", 50);
 		
 		try {
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -97,6 +97,9 @@ public class NewCubicTestProjectWizard extends Wizard implements INewWizard {
 			IFolder testFolder = project.getFolder("tests");
 			testFolder.create(false, true, monitor);
 
+			IFolder suiteFolder = project.getFolder("test suites");
+			suiteFolder.create(false, true, monitor);
+
 			IFolder srcFolder = project.getFolder("src");
 			srcFolder.create(false, true, monitor);
 
@@ -106,22 +109,13 @@ public class NewCubicTestProjectWizard extends Wizard implements INewWizard {
 			IFolder libFolder = project.getFolder("lib");
 			libFolder.create(false, true, monitor);
 			
-//			try {
-//				FileUtils.copyFile(new Path(FileLocator.toFileURL(CubicTestPlugin.getDefault().find(new Path("lib/CubicTestElementAPI.jar"))).getPath()).toFile(),
-//						libFolder.getFile("CubicTestElementAPI.jar").getLocation().toFile());
-//				FileUtils.copyFile(new Path(FileLocator.toFileURL(CubicTestPlugin.getDefault().find(new Path("lib/CubicUnit.jar"))).getPath()).toFile(),
-//						libFolder.getFile("CubicUnit.jar").getLocation().toFile());
-//			} catch (IOException e) {
-//				ErrorHandler.logAndShowErrorDialogAndRethrow(e);
-//			}
+			WizardUtils.copyPom(project.getLocation().toFile());
 			
 			javaProject.setOutputLocation(binFolder.getFullPath(), monitor);
 			IClasspathEntry[] classpath;
 			classpath = new IClasspathEntry[] {
 				JavaCore.newSourceEntry(srcFolder.getFullPath()),
 				JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER")),
-//				JavaCore.newLibraryEntry(libFolder.getFile("CubicTestElementAPI.jar").getFullPath(), null, null),
-//				JavaCore.newLibraryEntry(libFolder.getFile("CubicUnit.jar").getFullPath(), null, null)
 			};
 			javaProject.setRawClasspath(classpath, binFolder.getFullPath(), monitor);
 			
@@ -141,7 +135,7 @@ public class NewCubicTestProjectWizard extends Wizard implements INewWizard {
 			
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 			
-		} catch (CoreException e) {
+		} catch (Exception e) {
 			ErrorHandler.logAndShowErrorDialogAndRethrow(e);
 		}
 	}

@@ -7,12 +7,15 @@ package org.cubictest.exporters.selenium.runner.holders;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cubictest.export.exceptions.AssertionFailedException;
 import org.cubictest.export.exceptions.ExporterException;
 import org.cubictest.exporters.selenium.runner.util.UserCancelledException;
 import org.cubictest.exporters.selenium.utils.ContextHolder;
 import org.cubictest.model.PageElement;
+import org.cubictest.model.SubTest;
 import org.cubictest.model.TestPartStatus;
 import org.cubictest.model.UrlStartPoint;
+import org.cubictest.model.context.AbstractContext;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 
@@ -35,6 +38,7 @@ public class SeleniumHolder extends ContextHolder {
 	private IProgressMonitor monitor;
 	private UrlStartPoint handledUrlStartPoint;
 	private final Display display;
+	private boolean failOnAssertionFailure;
 	
 	public SeleniumHolder(Selenium selenium, Display display) {
 		//use Selenium from client e.g. the CubicRecorder
@@ -65,7 +69,20 @@ public class SeleniumHolder extends ContextHolder {
 			}
 		}
 		addResult(element, result);
+
+		if (result.equals(TestPartStatus.FAIL)) {
+			handleAssertionFailure(element);
+		}
 		
+	}
+
+	private void handleAssertionFailure(PageElement element) {
+		String childs = "";
+		if (element instanceof AbstractContext) {
+			AbstractContext context = (AbstractContext) element;
+			childs = "\n\nRequired child elements of context (all must be present):\n" + context.getElements().toString();
+		}
+		throw new AssertionFailedException("Page element assertion failed: " + element.toString() + childs);
 	}
 	
 	public void addResult(final PageElement element, TestPartStatus result) {
@@ -75,12 +92,31 @@ public class SeleniumHolder extends ContextHolder {
 
 		//show result immediately in the GUI:
 		final TestPartStatus finalResult = result;
-		display.asyncExec(new Runnable() {
-			public void run() {
-				if(element != null)
-					element.setStatus(finalResult);
-			}
-		});
+		if (display != null) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					if(element != null)
+						element.setStatus(finalResult);
+				}
+			});
+		}
+		if (result.equals(TestPartStatus.FAIL)) {
+			handleAssertionFailure(element);
+		}
+	}
+	
+	@Override
+	public void updateStatus(SubTest theSubTest, boolean hadException) {
+		final boolean hadEx = hadException;
+		final SubTest subTest = theSubTest;
+		if (display != null) {
+			display.asyncExec(new Runnable() {
+				public void run() {
+					if(subTest != null)
+						subTest.updateStatus(hadEx);
+				}
+			});
+		}
 	}
 	
 	public String showResults() {
@@ -127,6 +163,14 @@ public class SeleniumHolder extends ContextHolder {
 
 	public UrlStartPoint getHandledUrlStartPoint() {
 		return handledUrlStartPoint;
+	}
+
+	public void setFailOnAssertionFailure(boolean failOnAssertionFailure) {
+		this.failOnAssertionFailure = failOnAssertionFailure;
+	}
+
+	public boolean shouldFailOnAssertionFailure() {
+		return failOnAssertionFailure;
 	}
 
 }

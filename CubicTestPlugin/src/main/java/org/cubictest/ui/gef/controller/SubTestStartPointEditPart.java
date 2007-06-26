@@ -9,12 +9,9 @@ package org.cubictest.ui.gef.controller;
 
 import org.cubictest.model.ConnectionPoint;
 import org.cubictest.model.TransitionNode;
-import org.cubictest.ui.gef.policies.StartPointNodeEditPolicy;
 import org.cubictest.ui.gef.view.AbstractTransitionNodeFigure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.graphics.Color;
 
 
@@ -23,14 +20,14 @@ import org.eclipse.swt.graphics.Color;
  * 
  * @author Christian Schwarz
  */
-public class SubTestStartPointEditPart extends AbstractNodeEditPart {
+public class SubTestStartPointEditPart extends AbstractStartPointEditPart {
 
 	/**
 	 * Constructor for <code>SubTestStartPoint</code>.
 	 * @param point the model
 	 */
 	public SubTestStartPointEditPart(ConnectionPoint point) {
-		setModel(point);
+		super(point);
 	}
 
 	/* (non-Javadoc)
@@ -49,41 +46,5 @@ public class SubTestStartPointEditPart extends AbstractNodeEditPart {
 		return startPointFigure;
 	}
 
-	private String getName(){
-		String name = ((ConnectionPoint)getModel()).getName();
-		return name;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
-	@Override
-	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.GRAPHICAL_NODE_ROLE, new StartPointNodeEditPolicy());
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#refreshVisuals()
-	 */
-	@Override
-	protected void refreshVisuals() {
-		ConnectionPoint connectionPoint = (ConnectionPoint)getModel();
-		AbstractTransitionNodeFigure figure = (AbstractTransitionNodeFigure) getFigure();
-		figure.setText(getName());
-		Point position = connectionPoint.getPosition();
-		Rectangle r = new Rectangle(position.x, position.y, -1, -1);
-		((TestEditPart)getParent()).setLayoutConstraint(this, figure, r);
-	}
-
-	
-	@Override
-	public boolean isCopyable() {
-		return false;
-	}
-	
-	@Override
-	public boolean isCuttable() {
-		return false;
-	}
 	
 }

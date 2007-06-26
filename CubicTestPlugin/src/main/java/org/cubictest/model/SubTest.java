@@ -4,7 +4,6 @@
  */
 package org.cubictest.model;
 
-import org.cubictest.common.utils.ErrorHandler;
 import org.cubictest.persistence.TestPersistance;
 import org.cubictest.resources.interfaces.IResourceMonitor;
 import org.eclipse.core.resources.IProject;
@@ -33,11 +32,6 @@ public class SubTest extends ConnectionPoint {
 	 */
 	public Test getTest(boolean forceRefreshFile) {
 		if(test == null || forceRefreshFile) {
-			if (project == null) {
-				//try to get it from the customElementLoader 
-				//project = customTestStepLoader.getProject();
-				ErrorHandler.logAndShowErrorDialog("Error loading subtest");
-			}
 			test = TestPersistance.loadFromFile(project, getFilePath());
 			test.setResourceMonitor(resourceMonitor);
 			test.resetStatus();
@@ -88,6 +82,7 @@ public class SubTest extends ConnectionPoint {
 
 	@Override
 	public void resetStatus() {
+		setStatus(TestPartStatus.UNKNOWN);
 		test = null;
 	}
 
@@ -103,4 +98,57 @@ public class SubTest extends ConnectionPoint {
 	public String toString() {
 		return getClass().getSimpleName() + ": Name = " + getName() + ", FilePath = " + getFilePath();
 	}
+
+	public void updateStatus(boolean hadException) {
+		if (hadException) {
+			setStatus(TestPartStatus.EXCEPTION);
+			return;
+		}
+		int passed = 0;
+		int failed = 0;
+		int exception = 0;
+		int warn = 0;
+		int unknown = 0;
+		int elementCount = 0;
+		for (AbstractPage page : getTest(false).getPages()) {
+			for (PageElement pe : page.getElements()) {
+				elementCount++;
+				if (pe.getStatus().equals(TestPartStatus.PASS))
+					passed++;
+				else if (pe.getStatus().equals(TestPartStatus.FAIL))
+					failed++;
+				else if (pe.getStatus().equals(TestPartStatus.EXCEPTION))
+					exception++;
+				else if (pe.getStatus().equals(TestPartStatus.WARN))
+					warn++;
+				else if (pe.getStatus().equals(TestPartStatus.UNKNOWN))
+					unknown++;
+			}
+		}
+		for (SubTest subTest : getTest(false).getSubTests()) {
+			elementCount++;
+			if (subTest.getStatus().equals(TestPartStatus.PASS))
+				passed++;
+			else if (subTest.getStatus().equals(TestPartStatus.FAIL))
+				failed++;
+			else if (subTest.getStatus().equals(TestPartStatus.EXCEPTION))
+				exception++;
+			else if (subTest.getStatus().equals(TestPartStatus.WARN))
+				warn++;
+			else if (subTest.getStatus().equals(TestPartStatus.UNKNOWN))
+				unknown++;
+		}
+		if (passed == elementCount)
+			setStatus(TestPartStatus.PASS);
+		else if (failed == elementCount)
+			setStatus(TestPartStatus.FAIL);
+		else if (exception == elementCount)
+			setStatus(TestPartStatus.EXCEPTION);
+		else if (unknown == elementCount)
+			setStatus(TestPartStatus.UNKNOWN);
+		else
+			setStatus(TestPartStatus.WARN);
+	}
+	
+	
 }

@@ -7,14 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.cubictest.common.utils.ErrorHandler;
-import org.cubictest.model.customstep.CustomStep;
+import org.cubictest.model.customstep.CustomTestStep;
 import org.cubictest.model.customstep.CustomTestStepEvent;
 import org.cubictest.model.customstep.ICustomStepListener;
-import org.cubictest.persistence.CustomStepPersistance;
+import org.cubictest.persistence.CustomTestStepPersistance;
 import org.cubictest.ui.customstep.command.ChangeCustomStepDescriptionCommand;
 import org.cubictest.ui.customstep.section.CustomStepSection;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -25,7 +23,6 @@ import org.eclipse.core.runtime.RegistryFactory;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditDomain;
-import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CommandStackListener;
 import org.eclipse.gef.ui.actions.ActionRegistry;
@@ -55,7 +52,7 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 
 	private static final String CUBIC_TEST_CUSTOM_STEP_EXTENSION = "org.cubictest.exporters";
 
-	private CustomStep customStep;
+	private CustomTestStep customStep;
 
 	private boolean isDirty;
 
@@ -77,6 +74,8 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 	private Text descText;
 
 	private EditDomain editDomain;
+
+	private ParameterTableComposite parameterTableComposite;
 
 	public CustomStepEditor() {
 		super();
@@ -117,7 +116,7 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 		
 		IFileEditorInput input = (IFileEditorInput) editorInput;
 
-		customStep = CustomStepPersistance.loadFromFile(input.getFile());
+		customStep = CustomTestStepPersistance.loadFromFile(input.getFile());
 		customStep.addCustomStepListener(this);
 		
 		setSite(site);
@@ -127,7 +126,8 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 		
 		
 		for(String key : sections.keySet()){
-			sections.get(key).setData(customStep.getData(key));
+			String dataKey = sections.get(key).getDataKey();
+			sections.get(key).setData(customStep.getData(dataKey));
 		}
 	}
 
@@ -139,7 +139,7 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 	
 	@Override
 	public void doSave(IProgressMonitor monitor) {
-		CustomStepPersistance.saveToFile(customStep,
+		CustomTestStepPersistance.saveToFile(customStep,
 				((IFileEditorInput) getEditorInput()).getFile());
 
 		try {
@@ -211,6 +211,10 @@ public class CustomStepEditor extends EditorPart implements ICustomStepListener 
 				commandStack.execute(command);
 			}			
 		});
+		
+		parameterTableComposite = new ParameterTableComposite(composite,SWT.NONE);
+		parameterTableComposite.setCustemTestStepParameters(customStep.getParameters());
+		parameterTableComposite.setCommandStack(commandStack);
 		
 		for(String key : sections.keySet()){
 			sections.get(key).createControl(composite);

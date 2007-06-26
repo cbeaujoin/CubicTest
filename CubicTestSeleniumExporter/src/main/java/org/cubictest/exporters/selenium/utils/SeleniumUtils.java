@@ -20,6 +20,7 @@ import static org.cubictest.model.ActionType.REFRESH;
 import static org.cubictest.model.ActionType.SELECT;
 import static org.cubictest.model.ActionType.UNCHECK;
 import static org.cubictest.model.IdentifierType.CHECKED;
+import static org.cubictest.model.IdentifierType.CLASS;
 import static org.cubictest.model.IdentifierType.ELEMENT_NAME;
 import static org.cubictest.model.IdentifierType.HREF;
 import static org.cubictest.model.IdentifierType.ID;
@@ -35,7 +36,6 @@ import static org.cubictest.model.IdentifierType.VALUE;
 import org.apache.commons.lang.StringUtils;
 import org.cubictest.export.exceptions.ExporterException;
 import org.cubictest.model.ActionType;
-import org.cubictest.model.FormElement;
 import org.cubictest.model.IActionElement;
 import org.cubictest.model.Identifier;
 import org.cubictest.model.Image;
@@ -85,6 +85,24 @@ public class SeleniumUtils {
 			return getElementType(pe);
 		}
 		return getElementType(pe) + "[" + predicates + "]";
+	}
+	
+	
+	/**
+	 * Get the string that represents the Selenium locator-string for the element.
+	 * @param element
+	 * @return
+	 */
+	public static String getOptionLocator(Option option) {
+		Identifier optionMainId = option.getMainIdentifier();
+		String locator = "";
+		if (optionMainId == null) {
+			locator = "index=0";
+		}
+		else {
+			locator = SeleniumUtils.getIdType(optionMainId) + "=" + optionMainId.getValue();
+		}
+		return locator;
 	}
 	
 	
@@ -217,7 +235,7 @@ public class SeleniumUtils {
 		if (pe instanceof Option)
 			return "option";
 		if (pe instanceof Button)
-			return "input[@type=\"button\" or @type=\"submit\"]";
+			return "input[@type=\"button\" or @type=\"submit\" or @type=\"image\"]";
 		if (pe instanceof TextField)
 			return "input[@type=\"text\"]";
 		if (pe instanceof Password)
@@ -424,6 +442,9 @@ public class SeleniumUtils {
 		}
 		else if (id.getType().equals(INDEX)) {
 			return "index";
+		}
+		else if (id.getType().equals(CLASS)) {
+			return "class";
 		}
 		return null;
 	}

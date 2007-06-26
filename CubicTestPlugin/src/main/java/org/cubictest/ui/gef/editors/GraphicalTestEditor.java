@@ -30,6 +30,7 @@ import org.cubictest.ui.gef.actions.PopulateCommonAction;
 import org.cubictest.ui.gef.actions.PresentAction;
 import org.cubictest.ui.gef.actions.ResetTestAction;
 import org.cubictest.ui.gef.actions.TestContextMenuProvider;
+import org.cubictest.ui.gef.actions.UpdateTestStartPointAction;
 import org.cubictest.ui.gef.dnd.DataEditDropTargetListner;
 import org.cubictest.ui.gef.dnd.FileTransferDropTargetListener;
 import org.cubictest.ui.gef.factory.PaletteRootCreator;
@@ -276,7 +277,7 @@ public class GraphicalTestEditor extends EditorPart implements IAdaptable,
 		
 		getSite().setSelectionProvider(viewer);
 		
-		viewer.addDropTargetListener(new DataEditDropTargetListner(((IFileEditorInput)getEditorInput()).getFile().getProject(), viewer));
+		viewer.addDropTargetListener(new DataEditDropTargetListner(viewer));
 		viewer.addDropTargetListener(new FileTransferDropTargetListener(viewer));
 		viewer.setEditPartFactory(getEditPartFactory());
 		viewer.setContents(getContent());
@@ -413,6 +414,7 @@ public class GraphicalTestEditor extends EditorPart implements IAdaptable,
 		addEditPartAction(new PopulateCommonAction((IWorkbenchPart) this));
 		addEditPartAction(new AddUserInteractionTransitionAction((IWorkbenchPart) this));
 		addEditPartAction(new AddExtensionPointAction((IWorkbenchPart) this));
+		addEditPartAction(new UpdateTestStartPointAction((IWorkbenchPart) this));
 		
 		for (Class<? extends PageElement> elementClass : AddElementContextMenuList.getList()) {
 			addEditPartAction(new AddPageElementAction((IWorkbenchPart) this, elementClass));

@@ -33,10 +33,11 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
  * The "New" wizard page allows setting the container for
  * the new file as well as the file name. The page
  * will only accept file name without the extension OR
- * with the extension that matches the expected one (aat).
+ * with the extension that matches the expected one (aat or one set).
  */
 
 public class TestDetailsPage extends WizardPage {
+	private String fileExt = ".aat";
 	private Text containerText;
 	private Text filenameText;
 	private boolean updatingTestName;
@@ -49,8 +50,12 @@ public class TestDetailsPage extends WizardPage {
 	private static final int STATUS_INFO = 1;
 	private static final int STATUS_ERROR = 2;
 	private final boolean extentionPoint;
+	private String newItemType;
 	
-
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
+	@Override
 	public IWizardPage getNextPage() {
 		if(extentionPoint)
 			return getWizard().getPage(StartPointTypeSelectionPage.NAME);
@@ -62,11 +67,12 @@ public class TestDetailsPage extends WizardPage {
 	 * @param extensionPointMap 
 	 * @param pageName
 	 */
-	public TestDetailsPage(ISelection selection, boolean extentionPoint) {
+	public TestDetailsPage(ISelection selection, boolean extentionPoint, String newItemType) {
 		super("wizardPage");
+		this.newItemType = newItemType;
 		this.extentionPoint = extentionPoint;
-		setTitle("Create a new test");
-		setDescription("Select location to create test, and give the test a filename.");
+		setTitle("Create a new " + newItemType);
+		setDescription("Select location to create " + getNewItemTypeNoCapitalized() + ", and give it a filename.");
 		this.selection = selection;
 
 		IStructuredSelection iss = (IStructuredSelection) selection;
@@ -109,12 +115,13 @@ public class TestDetailsPage extends WizardPage {
 		Button button = new Button(container, SWT.PUSH);
 		button.setText("Browse...");
 		button.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleBrowse();
 			}
 		});
 		label = new Label(container, SWT.NULL);
-		label.setText("Test name:");
+		label.setText(getNewItemTypeCapitalized() + " name:");
 		testNameText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		testNameText.setLayoutData(gd);
@@ -187,14 +194,14 @@ public class TestDetailsPage extends WizardPage {
 			for (int i = 0; i < inputContents.length; i++) {
 				File file = inputContents[i];
 				String existingFileName = file.getName();
-				if (highestNumber < 1 && existingFileName.equals(baseName + ".aat"))
+				if (highestNumber < 1 && existingFileName.equals(baseName + fileExt))
 				{
 					highestNumber = 1;
 				}
-				else if (existingFileName.endsWith(".aat") && existingFileName.startsWith(baseName)) {
+				else if (existingFileName.endsWith(fileExt) && existingFileName.startsWith(baseName)) {
 					int fileNumber = 0;
 					try {
-						fileNumber = Integer.parseInt(existingFileName.substring(baseName.length(), existingFileName.indexOf((".aat"))));
+						fileNumber = Integer.parseInt(existingFileName.substring(baseName.length(), existingFileName.indexOf((fileExt))));
 					}
 					catch (Exception e) {
 						//no problem
@@ -206,10 +213,10 @@ public class TestDetailsPage extends WizardPage {
 			}
 		}
 		if (highestNumber < 1) {
-			return baseName + ".aat";
+			return baseName + fileExt;
 		}
 		else {
-			return baseName + (highestNumber + 1) + ".aat";			
+			return baseName + (highestNumber + 1) + fileExt;			
 		}
 	}
 
@@ -224,7 +231,7 @@ public class TestDetailsPage extends WizardPage {
 				getShell(),
 				ResourcesPlugin.getWorkspace().getRoot(),
 				false,
-				"Select test location");
+				"Select " + getNewItemTypeNoCapitalized() + " location");
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
@@ -243,7 +250,7 @@ public class TestDetailsPage extends WizardPage {
 		String testName = getName();
 		
 		if (container.length() == 0) {
-			updateStatus("Test location must be specified", STATUS_ERROR);
+			updateStatus(getNewItemTypeCapitalized() + " location must be specified", STATUS_ERROR);
 			return;
 		}
 		
@@ -270,8 +277,8 @@ public class TestDetailsPage extends WizardPage {
 			return;
 		}
 		
-		if (!fileName.endsWith(".aat")) {
-			updateStatus("File extension must be \".aat\"", STATUS_ERROR);
+		if (!fileName.endsWith(fileExt)) {
+			updateStatus("File extension must be \"" + fileExt + "\"", STATUS_ERROR);
 			return;
 		}
 		
@@ -301,13 +308,21 @@ public class TestDetailsPage extends WizardPage {
 	public String getFileName() {
 		return filenameText.getText();
 	}
-	
+	@Override
 	public String getName() {
 		return testNameText.getText();
 	}
-	
+	@Override
 	public String getDescription() {
 		return descriptionText.getText();
 	}
 	
+	private String getNewItemTypeCapitalized() {
+		return newItemType.substring(0, 1).toUpperCase() + newItemType.substring(1);
+	}
+	
+	private String getNewItemTypeNoCapitalized() {
+		return newItemType.substring(0, 1).toLowerCase() + newItemType.substring(1);
+	}
+
 }
